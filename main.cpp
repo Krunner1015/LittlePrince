@@ -24,10 +24,12 @@ int main() {
     }
     int width = 800;
     int height = 600;
+    float speed = 200.0f;
 
     sf::RenderWindow window(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Red);
+    sf::CircleShape prince(100.f);
+    prince.setFillColor(sf::Color::Black);
+    prince.setPosition(sf::Vector2f(width / 2 - 100, height / 2 - 100));
 
     while(window.isOpen()) {
         sf::Event event;
@@ -37,8 +39,20 @@ int main() {
             }
         }
 
-        window.clear();
-        window.draw(shape);
+        float deltaTime = clock.restart().asSeconds();
+
+        // Handle player movement
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) // Move up
+            prince.move(0, -speed * deltaTime);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) // Move down
+            prince.move(0, speed * deltaTime);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) // Move left
+            prince.move(-speed * deltaTime, 0);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) // Move right
+            prince.move(speed * deltaTime, 0);
+
+        window.clear(sf::Color::White);
+        window.draw(prince);
         window.display();
     }
     return 0;
