@@ -49,6 +49,17 @@ int main() {
             if(event.type == sf::Event::Closed) {
                 start.close();
             }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    int x = event.mouseButton.x;
+                    int y = event.mouseButton.y;
+                    std::cout << "Pos: " << x << ", " << y << std::endl;
+                    if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height / 2 - 50)) {
+                        start.close();
+                        gameStart = true;
+                    }
+                }
+            }
         }
         start.clear();
         start.draw(intro);
