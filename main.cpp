@@ -130,6 +130,18 @@ int main() {
     planet5.setPosition(width / 2 + 3200, height / 2 + 100);
     planets.push_back(planet5);
 
+    sf::CircleShape planet6(200.0f); //lamplighter
+    planet6.setFillColor(sf::Color(186, 113, 203));
+    planet6.setOrigin(200.0f, 200.0f);
+    planet6.setPosition(width / 2 + 4000, height / 2);
+    planets.push_back(planet6);
+
+    sf::CircleShape planet7(200.0f); //geographer
+    planet7.setFillColor(sf::Color(105, 68, 243));
+    planet7.setOrigin(200.0f, 200.0f);
+    planet7.setPosition(width / 2 + 4800, height / 2 + 100);
+    planets.push_back(planet7);
+
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
         sf::Event event;
