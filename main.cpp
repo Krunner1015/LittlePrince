@@ -89,25 +89,46 @@ int main() {
     prince.setOrigin(prince.getSize().x / 2, prince.getSize().y);
     prince.setPosition(sf::Vector2f(width / 2, height - 300.0f));
 
+    sf::Texture starsTex;
+    if (!starsTex.loadFromFile("files/images/stars.png")) {
+        std::cout << "Error loading stars image" << std::endl;
+    }
+    starsTex.setRepeated(true);
+    sf::RectangleShape stars(sf::Vector2f(width*10, height));
+    stars.setTexture(&starsTex);
+    stars.setTextureRect(sf::IntRect(0, 0, width*10, height));
+
     std::vector<sf::CircleShape> planets;
 
-    sf::CircleShape planet(200.0f);
+    sf::CircleShape planet(200.0f); //prince
     planet.setFillColor(sf::Color(251, 239, 212));
     planet.setOrigin(200.0f, 200.0f);
     planet.setPosition(width/2, height/2 + 100);
     planets.push_back(planet);
 
-    sf::CircleShape planet2(200.0f);
+    sf::CircleShape planet2(200.0f); //king
     planet2.setFillColor(sf::Color(253, 211, 90));
     planet2.setOrigin(200.0f, 200.0f);
     planet2.setPosition(width / 2 + 750, height / 2);
     planets.push_back(planet2);
 
-    sf::CircleShape planet3(200.0f);
+    sf::CircleShape planet3(200.0f); //vain man
     planet3.setFillColor(sf::Color(137, 164, 123));
     planet3.setOrigin(200.0f, 200.0f);
-    planet3.setPosition(width / 2 + 1500, height / 2 + 200);
+    planet3.setPosition(width / 2 + 1600, height / 2 + 200);
     planets.push_back(planet3);
+
+    sf::CircleShape planet4(200.0f); //drunkard
+    planet4.setFillColor(sf::Color(169, 114, 42));
+    planet4.setOrigin(200.0f, 200.0f);
+    planet4.setPosition(width / 2 + 2400, height / 2 + 200);
+    planets.push_back(planet4);
+
+    sf::CircleShape planet5(200.0f); //businessman
+    planet5.setFillColor(sf::Color(236, 180, 151));
+    planet5.setOrigin(200.0f, 200.0f);
+    planet5.setPosition(width / 2 + 3200, height / 2 + 100);
+    planets.push_back(planet5);
 
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
@@ -216,6 +237,9 @@ int main() {
             game.setView(view);
 
             game.clear(sf::Color(29, 62, 143));
+            sf::Vector2f viewCenter = view.getCenter();
+            stars.setPosition(viewCenter.x - width/2, viewCenter.y - height/2);
+            game.draw(stars);
             game.draw(prince);
             for (auto& p : planets) {
                 game.draw(p);
