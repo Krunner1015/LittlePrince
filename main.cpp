@@ -44,9 +44,6 @@ bool checkPlanetCollision(
 
 int main() {
     sf::Clock clock;
-    sf::Time pausedDuration = sf::Time::Zero;
-    sf::Time pauseStartTime;
-    sf::Time finalTime;
     sf::Font font;
     if (!font.loadFromFile("files/font.ttf")) {
         std::cout << "Error loading font" << std::endl;
