@@ -147,21 +147,26 @@ int main() {
             };
             bool leftOnPlanet = checkCornerContact(bottomLeft);
             bool rightOnPlanet = checkCornerContact(bottomRight);
-            if (leftOnPlanet || rightOnPlanet) {
+            if ((leftOnPlanet || rightOnPlanet) && Yvelocity >= 0.0f) {
                 float dxL = bottomLeft.x - planet.getPosition().x;
                 float dxR = bottomRight.x - planet.getPosition().x;
-                float dyL = std::sqrt(planet.getRadius() * planet.getRadius() - dxL * dxL);
-                float dyR = std::sqrt(planet.getRadius() * planet.getRadius() - dxR * dxR);
+                float dyL = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxL * dxL));
+                float dyR = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxR * dxR));
                 float groundYL = planet.getPosition().y - dyL;
                 float groundYR = planet.getPosition().y - dyR;
                 float groundY = std::min(groundYL, groundYR);
-
-                position.y = groundY;
-                Yvelocity = 0.0f;
-                inAir = false;
+                const float epsilon = 5.0f;
+                if (position.y >= groundY - epsilon) {
+                    position.y = groundY;
+                    Yvelocity = 0.0f;
+                    inAir = false;
+                } else {
+                    inAir = true;
+                }
             } else {
                 inAir = true;
             }
+
 
             // Respawn if prince falls out of view
             if (position.y > height + 100) {
