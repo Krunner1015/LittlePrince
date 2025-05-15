@@ -23,7 +23,7 @@ int main() {
         return -1;
     }
     int width = 1000;
-    int height = 900;
+    int height = 1100;
     float speed = 200.0f;
     bool gameStart = false;
 
@@ -33,10 +33,23 @@ int main() {
     }
     sf::Sprite intro;
     intro.setTexture(introTex);
+    intro.setPosition(sf::Vector2f(0, 200));
+
+    sf::Text welcome("The Little Prince", font, 75);
+    welcome.setFillColor(sf::Color::White);
+    welcome.setStyle(sf::Text::Bold);
+    setText(welcome, width/2, 100);
 
     sf::RectangleShape button(sf::Vector2f(500.0f, 100.0f));
     button.setFillColor(sf::Color(171, 222, 105));
     button.setPosition(sf::Vector2f(width / 2 - 250, height - 150));
+    std::cout << "Box x from " << width / 2 - 250 << " to " << width / 2 + 250 << std::endl;
+    std::cout << "Box y from " << height - 150 << " to " << height - 50 << std::endl;
+
+    sf::Text startText("Start", font, 50);
+    startText.setFillColor(sf::Color::White);
+    startText.setStyle(sf::Text::Bold);
+    setText(startText, width/2, height - 100);
 
     sf::CircleShape prince(100.f);
     prince.setFillColor(sf::Color::Black);
@@ -61,9 +74,11 @@ int main() {
                 }
             }
         }
-        start.clear();
+        start.clear(sf::Color(29, 62, 143));
         start.draw(intro);
+        start.draw(welcome);
         start.draw(button);
+        start.draw(startText);
         start.display();
     }
 
