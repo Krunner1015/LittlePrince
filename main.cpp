@@ -20,28 +20,20 @@ bool checkPlanetCollision(
     float& Yvelocity,
     bool& inAir
 ) {
-    sf::Vector2f planetCenter = planet.getPosition();
-    float radius = planet.getRadius();
-    sf::Vector2f princeCenter(princePosition.x, princePosition.y - 50.0f); // center of rectangle
-    sf::Vector2f delta = princeCenter - planetCenter;
-    float dist = std::sqrt(delta.x * delta.x + delta.y * delta.y);
-    if (dist < radius - 5.0f) {
-        princePosition.y += (radius - dist) * 0.2f;
-        Yvelocity = std::max(100.0f, Yvelocity); // force downward movement
-        return false;
-    }
-    float dxL = bottomLeft.x - planetCenter.x;
-    float dxR = bottomRight.x - planetCenter.x;
-    if (std::abs(dxL) > radius && std::abs(dxR) > radius) {
-        return false; // too far away horizontally
-    }
-    float dyL = std::sqrt(std::max(0.f, radius * radius - dxL * dxL));
-    float dyR = std::sqrt(std::max(0.f, radius * radius - dxR * dxR));
-    float groundYL = planetCenter.y - dyL;
-    float groundYR = planetCenter.y - dyR;
+    float dxL = bottomLeft.x - planet.getPosition().x;
+    float dxR = bottomRight.x - planet.getPosition().x;
+
+    if (std::abs(dxL) > planet.getRadius() && std::abs(dxR) > planet.getRadius())
+        return false; // too far away
+
+    float dyL = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxL * dxL));
+    float dyR = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxR * dxR));
+    float groundYL = planet.getPosition().y - dyL;
+    float groundYR = planet.getPosition().y - dyR;
     float groundY = std::min(groundYL, groundYR);
+
     const float epsilon = 5.0f;
-    if ((bottomLeft.y <= groundYL + epsilon && bottomRight.y <= groundYR + epsilon) && Yvelocity >= 0.0f && princePosition.y >= groundY - epsilon) {
+    if ((bottomLeft.y >= groundYL || bottomRight.y >= groundYR) && Yvelocity >= 0.0f && princePosition.y >= groundY - epsilon) {
         princePosition.y = groundY;
         Yvelocity = 0.0f;
         inAir = false;
@@ -64,9 +56,8 @@ int main() {
     float Yvelocity = 0.0f;
     bool running = true;
     bool inAir = false;
-    bool onPlanet;
+    bool onPlanet = true;
     bool gameStart = false;
-    bool onEarth = false;
 
     sf::Texture introTex;
     if (!introTex.loadFromFile("files/images/LittlePrinceOnMoon.png")) {
