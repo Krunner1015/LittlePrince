@@ -12,6 +12,36 @@ void setText(sf::Text &text, float x, float y) {
     text.setPosition(sf::Vector2f(x, y));
 }
 
+bool checkPlanetCollision(
+    const sf::CircleShape& planet,
+    sf::Vector2f& princePosition,
+    sf::Vector2f bottomLeft,
+    sf::Vector2f bottomRight,
+    float& Yvelocity,
+    bool& inAir
+) {
+    float dxL = bottomLeft.x - planet.getPosition().x;
+    float dxR = bottomRight.x - planet.getPosition().x;
+
+    if (std::abs(dxL) > planet.getRadius() && std::abs(dxR) > planet.getRadius())
+        return false; // too far away
+
+    float dyL = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxL * dxL));
+    float dyR = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxR * dxR));
+    float groundYL = planet.getPosition().y - dyL;
+    float groundYR = planet.getPosition().y - dyR;
+    float groundY = std::min(groundYL, groundYR);
+
+    const float epsilon = 5.0f;
+    if ((bottomLeft.y >= groundYL || bottomRight.y >= groundYR) && Yvelocity >= 0.0f && princePosition.y >= groundY - epsilon) {
+        princePosition.y = groundY;
+        Yvelocity = 0.0f;
+        inAir = false;
+        return true;
+    }
+    return false;
+}
+
 int main() {
     sf::Clock clock;
     sf::Time pausedDuration = sf::Time::Zero;
@@ -29,6 +59,7 @@ int main() {
     float Yvelocity = 0.0f;
     bool running = true;
     bool inAir = false;
+    bool onPlanet = true;
     bool gameStart = false;
 
     sf::Texture introTex;
@@ -58,10 +89,19 @@ int main() {
     prince.setOrigin(prince.getSize().x / 2, prince.getSize().y);
     prince.setPosition(sf::Vector2f(width / 2, height - 300.0f));
 
+    std::vector<sf::CircleShape> planets;
+
     sf::CircleShape planet(200.0f);
-    planet.setFillColor(sf::Color(169, 169, 169));
+    planet.setFillColor(sf::Color(251, 239, 212));
     planet.setOrigin(200.0f, 200.0f);
     planet.setPosition(width/2, height/2 + 100);
+    planets.push_back(planet);
+
+    sf::CircleShape planet2(200.0f);
+    planet2.setFillColor(sf::Color(253, 211, 90));
+    planet2.setOrigin(200.0f, 200.0f);
+    planet2.setPosition(width / 2 + 750, height / 2);
+    planets.push_back(planet2);
 
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
@@ -92,6 +132,7 @@ int main() {
 
     if (gameStart) {
         sf::RenderWindow game(sf::VideoMode(width, height), "The Little Prince", sf::Style::Close);
+        sf::View view(sf::FloatRect(0, 0, width, height));
         sf::Vector2f position = prince.getPosition();
         while(game.isOpen()) {
             sf::Event event;
@@ -111,6 +152,7 @@ int main() {
                         position.y = planet.getPosition().y - planet.getRadius();
                         Yvelocity = 0.0f;
                         inAir = false;
+                        view.setCenter(position);
                     }
                 }
             }
@@ -136,51 +178,41 @@ int main() {
             sf::Vector2f bottomRight(position.x + prince.getSize().x / 2, position.y);
 
             // Planet collision check
-            auto checkCornerContact = [&](sf::Vector2f corner) {
-                float dx = corner.x - planet.getPosition().x;
-                if (std::abs(dx) >= planet.getRadius()) {
-                    return false;
-                }
-                float dy = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dx * dx));
-                float groundY = planet.getPosition().y - dy;
-                return corner.y >= groundY;
-            };
-            bool leftOnPlanet = checkCornerContact(bottomLeft);
-            bool rightOnPlanet = checkCornerContact(bottomRight);
-            if ((leftOnPlanet || rightOnPlanet) && Yvelocity >= 0.0f) {
-                float dxL = bottomLeft.x - planet.getPosition().x;
-                float dxR = bottomRight.x - planet.getPosition().x;
-                float dyL = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxL * dxL));
-                float dyR = std::sqrt(std::max(0.f, planet.getRadius() * planet.getRadius() - dxR * dxR));
-                float groundYL = planet.getPosition().y - dyL;
-                float groundYR = planet.getPosition().y - dyR;
-                float groundY = std::min(groundYL, groundYR);
-                const float epsilon = 5.0f;
-                if (position.y >= groundY - epsilon) {
-                    position.y = groundY;
-                    Yvelocity = 0.0f;
-                    inAir = false;
-                } else {
-                    inAir = true;
-                }
-            } else {
+            onPlanet = false;
+            for (auto& p : planets) {
+                onPlanet |= checkPlanetCollision(p, position, bottomLeft, bottomRight, Yvelocity, inAir);
+            }
+            if (!onPlanet) {
                 inAir = true;
             }
 
-
             // Respawn if prince falls out of view
-            if (position.y > height + 100) {
-                position.x = planet.getPosition().x;
-                position.y = planet.getPosition().y - planet.getRadius();
+            if (position.y > height + 400) {
+                float minDist = std::numeric_limits<float>::max();
+                sf::Vector2f bestPos;
+                for (auto& p : planets) {
+                    float dx = position.x - p.getPosition().x;
+                    float dist = std::abs(dx); // or use sqrt(dx*dx + dy*dy) for full 2D distance
+                    if (dist < minDist) {
+                        minDist = dist;
+                        bestPos.x = p.getPosition().x;
+                        bestPos.y = p.getPosition().y - p.getRadius(); // just above the surface
+                    }
+                }
+                position = bestPos;
                 Yvelocity = 0.0f;
                 inAir = false;
+                view.setCenter(position);
             }
 
             prince.setPosition(position);
+            view.setCenter(position);
+            game.setView(view);
 
             game.clear(sf::Color(29, 62, 143));
             game.draw(prince);
             game.draw(planet);
+            game.draw(planet2);
             game.display();
         }
     }
