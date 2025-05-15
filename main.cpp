@@ -103,6 +103,12 @@ int main() {
     planet2.setPosition(width / 2 + 750, height / 2);
     planets.push_back(planet2);
 
+    sf::CircleShape planet3(200.0f);
+    planet3.setFillColor(sf::Color(137, 164, 123));
+    planet3.setOrigin(200.0f, 200.0f);
+    planet3.setPosition(width / 2 + 1500, height / 2 + 200);
+    planets.push_back(planet3);
+
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
         sf::Event event;
@@ -211,8 +217,9 @@ int main() {
 
             game.clear(sf::Color(29, 62, 143));
             game.draw(prince);
-            game.draw(planet);
-            game.draw(planet2);
+            for (auto& p : planets) {
+                game.draw(p);
+            }
             game.display();
         }
     }
