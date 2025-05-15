@@ -142,6 +142,14 @@ int main() {
     planet7.setPosition(width / 2 + 4800, height / 2 + 100);
     planets.push_back(planet7);
 
+    sf::Texture arrowTex;
+    if (!arrowTex.loadFromFile("files/images/Arrow.png")) {
+        std::cout << "Error loading arrow image" << std::endl;
+    }
+    sf::Sprite arrow;
+    arrow.setTexture(arrowTex);
+    arrow.setPosition(sf::Vector2f(5500, 0));
+
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
         sf::Event event;
@@ -252,6 +260,7 @@ int main() {
             sf::Vector2f viewCenter = view.getCenter() *0.8f;
             stars.setPosition(viewCenter.x - width/2, viewCenter.y - height/2);
             game.draw(stars);
+            game.draw(arrow);
             game.draw(prince);
             for (auto& p : planets) {
                 game.draw(p);
