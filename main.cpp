@@ -237,7 +237,7 @@ int main() {
             game.setView(view);
 
             game.clear(sf::Color(29, 62, 143));
-            sf::Vector2f viewCenter = view.getCenter();
+            sf::Vector2f viewCenter = view.getCenter() *0.8f;
             stars.setPosition(viewCenter.x - width/2, viewCenter.y - height/2);
             game.draw(stars);
             game.draw(prince);
