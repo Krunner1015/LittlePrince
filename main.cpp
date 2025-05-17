@@ -96,6 +96,16 @@ int main() {
     stars.setTextureRect(sf::IntRect(0, 0, width*10, height));
 
     std::vector<sf::CircleShape> planets;
+    std::vector<sf::Sprite> planetsTex;
+
+    sf::Texture PrincePlanetTex;
+    if (!PrincePlanetTex.loadFromFile("files/images/PrincePlanet.png")) {
+        std::cout << "Error loading Prince Planet image" << std::endl;
+    }
+    sf::Sprite PrincePlanet;
+    PrincePlanet.setTexture(PrincePlanetTex);
+    PrincePlanet.setPosition(sf::Vector2f(0, 160));
+    planetsTex.push_back(PrincePlanet);
 
     sf::CircleShape planet(200.0f); //prince
     planet.setFillColor(sf::Color(251, 239, 212));
@@ -260,6 +270,9 @@ int main() {
             game.draw(arrow);
             game.draw(prince);
             for (auto& p : planets) {
+                game.draw(p);
+            }
+            for (auto& p : planetsTex) {
                 game.draw(p);
             }
             game.display();
