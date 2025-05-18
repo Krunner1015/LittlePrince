@@ -255,13 +255,21 @@ int main() {
             while(game.pollEvent(event)) {
                 if(event.type == sf::Event::Closed) {
                     game.close();
+                    gameStart = false;
                 }
                 if (event.type == sf::Event::KeyPressed) {
                     if (event.key.code == sf::Keyboard::Escape) {
                         game.close();
+                        gameStart = false;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         std::cout << "Down" << std::endl;
+                        seenKing = true;
+                        seenVainMan = true;
+                        seenDrunkard = true;
+                        seenBusinessman = true;
+                        seenLamplighter = true;
+                        seenGeographer = true;
                     }
                     if (event.key.code == sf::Keyboard::R) {
                         position.x = planet.getPosition().x;
@@ -315,6 +323,11 @@ int main() {
 
             // Respawn if prince falls out of view
             if (position.y > height + 400) {
+                if (position.x > 5600 && seenKing && seenVainMan && seenDrunkard && seenBusinessman && seenLamplighter && seenGeographer) {
+                    game.close();
+                    gameStart = false;
+                    onEarth = true;
+                }
                 float minDist = std::numeric_limits<float>::max();
                 sf::Vector2f bestPos;
                 for (auto& p : planets) {
