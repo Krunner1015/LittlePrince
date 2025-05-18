@@ -113,11 +113,29 @@ int main() {
     planet.setPosition(width/2, height/2 + 100);
     planets.push_back(planet);
 
+    sf::Texture KingPlanetTex;
+    if (!KingPlanetTex.loadFromFile("files/images/KingPlanet.png")) {
+        std::cout << "Error loading King Planet image" << std::endl;
+    }
+    sf::Sprite KingPlanet;
+    KingPlanet.setTexture(KingPlanetTex);
+    KingPlanet.setPosition(sf::Vector2f(875, -25));
+    planetsTex.push_back(KingPlanet);
+
     sf::CircleShape planet2(200.0f); //king
     planet2.setFillColor(sf::Color(253, 211, 90));
     planet2.setOrigin(200.0f, 200.0f);
     planet2.setPosition(width / 2 + 750, height / 2);
     planets.push_back(planet2);
+
+    sf::Texture VainManPlanetTex;
+    if (!VainManPlanetTex.loadFromFile("files/images/VainManPlanet.png")) {
+        std::cout << "Error loading Vain Man Planet image" << std::endl;
+    }
+    sf::Sprite VainManPlanet;
+    VainManPlanet.setTexture(VainManPlanetTex);
+    VainManPlanet.setPosition(sf::Vector2f(1615, 15));
+    planetsTex.push_back(VainManPlanet);
 
     sf::CircleShape planet3(200.0f); //vain man
     planet3.setFillColor(sf::Color(137, 164, 123));
@@ -125,11 +143,29 @@ int main() {
     planet3.setPosition(width / 2 + 1600, height / 2 + 200);
     planets.push_back(planet3);
 
+    sf::Texture DrunkardPlanetTex;
+    if (!DrunkardPlanetTex.loadFromFile("files/images/DrunkardPlanet.png")) {
+        std::cout << "Error loading Drunkard Planet image" << std::endl;
+    }
+    sf::Sprite DrunkardPlanet;
+    DrunkardPlanet.setTexture(DrunkardPlanetTex);
+    DrunkardPlanet.setPosition(sf::Vector2f(2400, 245));
+    planetsTex.push_back(DrunkardPlanet);
+
     sf::CircleShape planet4(200.0f); //drunkard
     planet4.setFillColor(sf::Color(169, 114, 42));
     planet4.setOrigin(200.0f, 200.0f);
     planet4.setPosition(width / 2 + 2400, height / 2 + 200);
     planets.push_back(planet4);
+
+    sf::Texture BusinessmanPlanetTex;
+    if (!BusinessmanPlanetTex.loadFromFile("files/images/BusinessmanPlanet.png")) {
+        std::cout << "Error loading Businessman Planet image" << std::endl;
+    }
+    sf::Sprite BusinessmanPlanet;
+    BusinessmanPlanet.setTexture(BusinessmanPlanetTex);
+    BusinessmanPlanet.setPosition(sf::Vector2f(3195, 150));
+    planetsTex.push_back(BusinessmanPlanet);
 
     sf::CircleShape planet5(200.0f); //businessman
     planet5.setFillColor(sf::Color(236, 180, 151));
@@ -137,16 +173,34 @@ int main() {
     planet5.setPosition(width / 2 + 3200, height / 2 + 100);
     planets.push_back(planet5);
 
+    sf::Texture LamplighterPlanetTex;
+    if (!LamplighterPlanetTex.loadFromFile("files/images/LamplighterPlanet.png")) {
+        std::cout << "Error loading Lamplighter Planet image" << std::endl;
+    }
+    sf::Sprite LamplighterPlanet;
+    LamplighterPlanet.setTexture(LamplighterPlanetTex);
+    LamplighterPlanet.setPosition(sf::Vector2f(4000, 60));
+    planetsTex.push_back(LamplighterPlanet);
+
     sf::CircleShape planet6(200.0f); //lamplighter
     planet6.setFillColor(sf::Color(186, 113, 203));
     planet6.setOrigin(200.0f, 200.0f);
-    planet6.setPosition(width / 2 + 4000, height / 2);
+    planet6.setPosition(width / 2 + 4000, height / 2 + 210);
     planets.push_back(planet6);
+
+    sf::Texture GeographerPlanetTex;
+    if (!GeographerPlanetTex.loadFromFile("files/images/GeographerPlanet.png")) {
+        std::cout << "Error loading Geographer Planet image" << std::endl;
+    }
+    sf::Sprite GeographerPlanet;
+    GeographerPlanet.setTexture(GeographerPlanetTex);
+    GeographerPlanet.setPosition(sf::Vector2f(4800, 160));
+    planetsTex.push_back(GeographerPlanet);
 
     sf::CircleShape planet7(200.0f); //geographer
     planet7.setFillColor(sf::Color(105, 68, 243));
     planet7.setOrigin(200.0f, 200.0f);
-    planet7.setPosition(width / 2 + 4800, height / 2 + 100);
+    planet7.setPosition(width / 2 + 4800, height / 2 + 110);
     planets.push_back(planet7);
 
     sf::Texture arrowTex;
@@ -204,6 +258,13 @@ int main() {
                     if (event.key.code == sf::Keyboard::R) {
                         position.x = planet.getPosition().x;
                         position.y = planet.getPosition().y - planet.getRadius();
+                        Yvelocity = 0.0f;
+                        inAir = false;
+                        view.setCenter(position);
+                    }
+                    if (event.key.code == sf::Keyboard::E) {
+                        position.x = planet7.getPosition().x;
+                        position.y = planet7.getPosition().y - planet7.getRadius();
                         Yvelocity = 0.0f;
                         inAir = false;
                         view.setCenter(position);
