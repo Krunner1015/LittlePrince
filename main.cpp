@@ -54,10 +54,18 @@ int main() {
     float speed = 200.0f;
     float gravity = 500.0f;
     float Yvelocity = 0.0f;
-    bool running = true;
+    bool runL = false;
+    bool runR = false;
     bool inAir = false;
     bool onPlanet = true;
+    bool seenKing = false;
+    bool seenVainMan = false;
+    bool seenDrunkard = false;
+    bool seenBusinessman = false;
+    bool seenLamplighter = false;
+    bool seenGeographer = false;
     bool gameStart = false;
+    bool onEarth = false;
 
     sf::Texture introTex;
     if (!introTex.loadFromFile("files/images/LittlePrinceOnMoon.png")) {
@@ -281,9 +289,13 @@ int main() {
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { // Move left
                 position.x -= speed * deltaTime;
+                runL = true;
+                runR = false;
             }
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { // Move right
                 position.x += speed * deltaTime;
+                runL = false;
+                runR = true;
             }
 
             //Gravity
@@ -329,7 +341,15 @@ int main() {
             stars.setPosition(viewCenter.x - width/2, viewCenter.y - height/2);
             game.draw(stars);
             game.draw(arrow);
-            game.draw(prince);
+            if (runL && !runR) {
+                game.draw(prince);
+            } else if (runR && !runL) {
+                game.draw(prince);
+            } else {
+                game.draw(prince);
+            }
+            runL = false;
+            runR = false;
             for (auto& p : planets) {
                 game.draw(p);
             }
