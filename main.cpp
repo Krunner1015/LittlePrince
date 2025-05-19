@@ -58,6 +58,7 @@ int main() {
     bool runR = false;
     bool inAir = false;
     bool onPlanet = true;
+    bool seenFlower = false;
     bool seenKing = false;
     bool seenVainMan = false;
     bool seenDrunkard = false;
@@ -263,13 +264,28 @@ int main() {
                         gameStart = false;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
-                        std::cout << "Down" << std::endl;
-                        seenKing = true;
-                        seenVainMan = true;
-                        seenDrunkard = true;
-                        seenBusinessman = true;
-                        seenLamplighter = true;
-                        seenGeographer = true;
+                        if (position.x > 350 && position.x < 650 && position.y > 300 && position.y < 500) {
+                            seenFlower = true;
+                            std::cout << "Flower seen" << std::endl;
+                        } else if (position.x > 1100 && position.x < 1400 && position.y > 200 && position.y < 400) {
+                            seenKing = true;
+                            std::cout << "King seen" << std::endl;
+                        } else if (position.x > 1950 && position.x < 2250 && position.y > 400 && position.y < 600) {
+                            seenVainMan = true;
+                            std::cout << "Vain Man seen" << std::endl;
+                        } else if (position.x > 2750 && position.x < 3050 && position.y > 400 && position.y < 600) {
+                            seenDrunkard = true;
+                            std::cout << "Drunkard seen" << std::endl;
+                        } else if (position.x > 3550 && position.x < 3850 && position.y > 300 && position.y < 500) {
+                            seenBusinessman = true;
+                            std::cout << "Businessman seen" << std::endl;
+                        } else if (position.x > 4350 && position.x < 4650 && position.y > 410 && position.y < 610) {
+                            seenLamplighter = true;
+                            std::cout << "Lamplighter seen" << std::endl;
+                        } else if (position.x > 5150 && position.x < 5450 && position.y > 310 && position.y < 510) {
+                            seenGeographer = true;
+                            std::cout << "Geographer seen" << std::endl;
+                        }
                     }
                     if (event.key.code == sf::Keyboard::R) {
                         position.x = planet.getPosition().x;
@@ -323,10 +339,11 @@ int main() {
 
             // Respawn if prince falls out of view
             if (position.y > height + 400) {
-                if (position.x > 5600 && seenKing && seenVainMan && seenDrunkard && seenBusinessman && seenLamplighter && seenGeographer) {
+                if (position.x > 5600 && seenFlower && seenKing && seenVainMan && seenDrunkard && seenBusinessman && seenLamplighter && seenGeographer) {
                     game.close();
                     gameStart = false;
                     onEarth = true;
+                    std::cout << "Going to Earth" << std::endl;
                 }
                 float minDist = std::numeric_limits<float>::max();
                 sf::Vector2f bestPos;
