@@ -233,7 +233,7 @@ int main() {
                     int y = event.mouseButton.y;
                     if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height - 50)) {
                         start.close();
-                        gameStart = true;
+                        onEarth = true;
                         height = 900;
                     }
                 }
@@ -394,9 +394,17 @@ int main() {
         sf::Vector2f position = prince.getPosition();
         gravity = 980.0f;
 
-        sf::RectangleShape grass(sf::Vector2f(10000.0f, 200.0f));
-        grass.setFillColor(sf::Color(157, 152, 26));
-        grass.setPosition(sf::Vector2f(0, height - 200));
+        sf::Texture grassTex;
+        if (!grassTex.loadFromFile("files/images/grass.png")) {
+            std::cout << "Error loading grass image" << std::endl;
+        }
+        std::vector<sf::Sprite> grassTiles;
+        for (float x = -84.0f; x < 10000; x += 1623) {
+            sf::Sprite grass;
+            grass.setTexture(grassTex);
+            grass.setPosition(sf::Vector2f(x, height - 332.0f));
+            grassTiles.push_back(grass);
+        }
 
         sf::View view(sf::FloatRect(0, 0, width, height));
         view.setCenter(prince.getPosition().x, height/2);
@@ -452,7 +460,9 @@ int main() {
             earth.clear(sf::Color(222, 206, 146));
             earth.setView(view);
             earth.draw(prince);
-            earth.draw(grass);
+            for (auto& tile : grassTiles) {
+                earth.draw(tile);
+            }
             earth.display();
         }
     }
