@@ -668,15 +668,6 @@ int main() {
                     }
                     updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
                     dialogueClock.restart();
-                } else {
-                    currentConvo = nullptr;
-                    inFlowerConvo = false;
-                    inKingConvo = false;
-                    inVainConvo = false;
-                    inDrunkardConvo = false;
-                    inBusinessmanConvo = false;
-                    inLamplighterConvo = false;
-                    inGeographerConvo = false;
                 }
             }
 
