@@ -42,6 +42,27 @@ bool checkPlanetCollision(
     return false;
 }
 
+void updateDialogueDisplay(
+    sf::Text &text,
+    sf::RectangleShape &box,
+    std::vector<std::string> &lines,
+    const sf::Font &font,
+    unsigned int characterSize,
+    int windowWidth
+) {
+    std::string allText;
+    for (const auto& line : lines)
+        allText += line + "\n";
+
+    text.setString(allText);
+
+    sf::FloatRect bounds = text.getLocalBounds();
+    box.setSize(sf::Vector2f(windowWidth - 100, bounds.height + 40));
+    box.setOrigin(box.getSize().x / 2, box.getSize().y / 2);
+    box.setPosition(windowWidth / 2.0f, 800); // adjust as needed
+    text.setPosition(windowWidth / 2.0f, 800 - bounds.height / 2 + 10);
+}
+
 int main() {
     sf::Clock clock;
     sf::Font font;
@@ -49,6 +70,11 @@ int main() {
         std::cout << "Error loading font" << std::endl;
         return -1;
     }
+    sf::Clock dialogueClock;
+    float dialogueDelay = 2.0f;
+    int currentLineIndex = 0;
+    std::vector<std::string>* currentConvo = nullptr;
+    std::vector<std::string> visibleLines;
     int width = 1000;
     int height = 1100;
     float speed = 200.0f;
@@ -59,14 +85,60 @@ int main() {
     bool inAir = false;
     bool onPlanet = true;
     bool seenFlower = false;
+    bool inFlowerConvo = false;
     bool seenKing = false;
+    bool inKingConvo = false;
     bool seenVainMan = false;
+    bool inVainConvo = false;
     bool seenDrunkard = false;
+    bool inDrunkardConvo = false;
     bool seenBusinessman = false;
+    bool inBusinessmanConvo = false;
     bool seenLamplighter = false;
+    bool inLamplighterConvo = false;
     bool seenGeographer = false;
+    bool inGeographerConvo = false;
     bool gameStart = false;
     bool onEarth = false;
+
+    std::vector<std::string> flowerConvo = {
+        "Prince: Good-bye",
+        "Flower: ...",
+        "Prince: Good-bye",
+        "Flower: 'cough'",
+        "Flower: I've been silly, I ask your forgiveness.",
+        "        Try to be happy.",
+        "Prince: ...",
+        "Flower: Of course I love you, ",
+        "Flower: It was my fault you never knew. It doesn't matter.",
+        "        But you were just as silly as I was. Try to be happy",
+        "        Put that glass thing down. I don't want it anymore.",
+        "Prince: But the wind . . .",
+        "Flower: My cold isn't that bad . . . The night air will do me",
+        "        good. I'm a flower.",
+        "Prince: But the animals . . .",
+        "Flower: I need to put up with two or three caterpillars if I",
+        "        want to get to know the butterflies. Apparently they're",
+        "        very beautiful. Otherwise who will visit me? You'll be",
+        "        far away. As for the big animals, I'm not afraid of them.",
+        "        I have my own claws.",
+        "Flower: Don't hang around like this; it's irritating. You made up",
+        "        your mind to leave. Now go."
+    };
+    std::vector<std::string> kingConvo = {". . ."};
+    std::vector<std::string> vainConvo = {". . ."};
+    std::vector<std::string> drunkardConvo = {". . ."};
+    std::vector<std::string> businessmanConvo = {". . ."};
+    std::vector<std::string> lamplighterConvo = {". . ."};
+    std::vector<std::string> geographerConvo = {". . ."};
+
+    sf::Text dialogueText;
+    dialogueText.setFont(font);
+    dialogueText.setCharacterSize(24);
+    dialogueText.setFillColor(sf::Color::White);
+
+    sf::RectangleShape dialogueBox(sf::Vector2f(width - 100, 100));
+    dialogueBox.setFillColor(sf::Color(0, 0, 0, 150));
 
     sf::Texture introTex;
     if (!introTex.loadFromFile("files/images/LittlePrinceOnMoon.png")) {
@@ -233,7 +305,7 @@ int main() {
                     int y = event.mouseButton.y;
                     if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height - 50)) {
                         start.close();
-                        onEarth = true;
+                        gameStart = true;
                         height = 900;
                     }
                 }
@@ -265,24 +337,115 @@ int main() {
                     }
                     if (event.key.code == sf::Keyboard::Down) {
                         if (position.x > 350 && position.x < 650 && position.y > 300 && position.y < 500 && !seenFlower) {
+                            currentConvo = &flowerConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = true;
+                            inKingConvo = false;
+                            inVainConvo = false;
+                            inDrunkardConvo = false;
+                            inBusinessmanConvo = false;
+                            inLamplighterConvo = false;
+                            inGeographerConvo = false;
                             seenFlower = true;
                             std::cout << "Flower seen" << std::endl;
                         } else if (position.x > 1100 && position.x < 1400 && position.y > 200 && position.y < 400 && !seenKing) {
+                            currentConvo = &kingConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = false;
+                            inKingConvo = true;
+                            inVainConvo = false;
+                            inDrunkardConvo = false;
+                            inBusinessmanConvo = false;
+                            inLamplighterConvo = false;
+                            inGeographerConvo = false;
                             seenKing = true;
                             std::cout << "King seen" << std::endl;
                         } else if (position.x > 1950 && position.x < 2250 && position.y > 400 && position.y < 600 && !seenVainMan) {
+                            currentConvo = &vainConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = false;
+                            inKingConvo = false;
+                            inVainConvo = true;
+                            inDrunkardConvo = false;
+                            inBusinessmanConvo = false;
+                            inLamplighterConvo = false;
+                            inGeographerConvo = false;
                             seenVainMan = true;
                             std::cout << "Vain Man seen" << std::endl;
                         } else if (position.x > 2750 && position.x < 3050 && position.y > 400 && position.y < 600 && !seenDrunkard) {
+                            currentConvo = &drunkardConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = false;
+                            inKingConvo = false;
+                            inVainConvo = false;
+                            inDrunkardConvo = true;
+                            inBusinessmanConvo = false;
+                            inLamplighterConvo = false;
+                            inGeographerConvo = false;
                             seenDrunkard = true;
                             std::cout << "Drunkard seen" << std::endl;
                         } else if (position.x > 3550 && position.x < 3850 && position.y > 300 && position.y < 500 && !seenBusinessman) {
+                            currentConvo = &businessmanConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = false;
+                            inKingConvo = false;
+                            inVainConvo = false;
+                            inDrunkardConvo = false;
+                            inBusinessmanConvo = true;
+                            inLamplighterConvo = false;
+                            inGeographerConvo = false;
                             seenBusinessman = true;
                             std::cout << "Businessman seen" << std::endl;
                         } else if (position.x > 4350 && position.x < 4650 && position.y > 410 && position.y < 610 && !seenLamplighter) {
+                            currentConvo = &lamplighterConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = false;
+                            inKingConvo = false;
+                            inVainConvo = false;
+                            inDrunkardConvo = false;
+                            inBusinessmanConvo = false;
+                            inLamplighterConvo = true;
+                            inGeographerConvo = false;
                             seenLamplighter = true;
                             std::cout << "Lamplighter seen" << std::endl;
                         } else if (position.x > 5150 && position.x < 5450 && position.y > 310 && position.y < 510 && !seenGeographer) {
+                            currentConvo = &geographerConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowerConvo = false;
+                            inKingConvo = false;
+                            inVainConvo = false;
+                            inDrunkardConvo = false;
+                            inBusinessmanConvo = false;
+                            inLamplighterConvo = false;
+                            inGeographerConvo = true;
                             seenGeographer = true;
                             std::cout << "Geographer seen" << std::endl;
                         }
@@ -362,6 +525,28 @@ int main() {
                 view.setCenter(position);
             }
 
+            if (currentConvo && dialogueClock.getElapsedTime().asSeconds() >= dialogueDelay) {
+                currentLineIndex++;
+                if (currentLineIndex < currentConvo->size()) {
+                    visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                    if (visibleLines.size() > 8) {
+                        visibleLines.erase(visibleLines.begin());
+                    }
+                    updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                    dialogueClock.restart();
+                } else {
+                    currentConvo = nullptr;
+                    inFlowerConvo = false;
+                    inKingConvo = false;
+                    inVainConvo = false;
+                    inDrunkardConvo = false;
+                    inBusinessmanConvo = false;
+                    inLamplighterConvo = false;
+                    inGeographerConvo = false;
+                }
+            }
+
+
             prince.setPosition(position);
             view.setCenter(position);
             game.setView(view);
@@ -385,6 +570,12 @@ int main() {
             }
             for (auto& p : planetsTex) {
                 game.draw(p);
+            }
+            if (inFlowerConvo || inKingConvo || inVainConvo || inDrunkardConvo || inBusinessmanConvo || inLamplighterConvo || inGeographerConvo) {
+                dialogueBox.setPosition(width / 2, height / 2 - 300);
+                dialogueText.setPosition(dialogueBox.getPosition().x - dialogueBox.getSize().x / 2 + 20, dialogueBox.getPosition().y - dialogueBox.getSize().y / 2 + 20);
+                game.draw(dialogueBox);
+                game.draw(dialogueText);
             }
             game.display();
         }
@@ -459,7 +650,15 @@ int main() {
 
             earth.clear(sf::Color(222, 206, 146));
             earth.setView(view);
-            earth.draw(prince);
+            if (runL && !runR) {
+                earth.draw(prince);
+            } else if (runR && !runL) {
+                earth.draw(prince);
+            } else {
+                earth.draw(prince);
+            }
+            runL = false;
+            runR = false;
             for (auto& tile : grassTiles) {
                 earth.draw(tile);
             }
