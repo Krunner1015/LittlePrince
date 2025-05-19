@@ -118,19 +118,153 @@ int main() {
         "        good. I'm a flower.",
         "Prince: But the animals . . .",
         "Flower: I need to put up with two or three caterpillars if I",
-        "        want to get to know the butterflies. Apparently they're",
-        "        very beautiful. Otherwise who will visit me? You'll be",
-        "        far away. As for the big animals, I'm not afraid of them.",
-        "        I have my own claws.",
-        "Flower: Don't hang around like this; it's irritating. You made up",
-        "        your mind to leave. Now go."
+        "        want to get to know the butterflies. Apparently",
+        "        they're very beautiful. Otherwise who will visit me?",
+        "        You'll be far away. As for the big animals, I'm not",
+        "        afraid of them. I have my own claws.",
+        "Flower: Don't hang around like this; it's irritating. You",
+        "        made up your mind to leave. Now go."
     };
-    std::vector<std::string> kingConvo = {". . ."};
-    std::vector<std::string> vainConvo = {". . ."};
-    std::vector<std::string> drunkardConvo = {". . ."};
-    std::vector<std::string> businessmanConvo = {". . ."};
-    std::vector<std::string> lamplighterConvo = {". . ."};
-    std::vector<std::string> geographerConvo = {". . ."};
+    std::vector<std::string> kingConvo = {
+        "King: Ah! A subject!",
+        "Prince: How do you know me?",
+        "King: Come closer. Let me see you.",
+        "Prince: 'yawn'",
+        "King: No yawning before a king!",
+        "Prince: Sorry... I'm tired.",
+        "King: Then I order you to yawn.",
+        "Prince: I can't now...",
+        "King: Hmm. May I remind you I must be obeyed.",
+        "Prince: May I sit?",
+        "King: I order you to sit.",
+        "Prince: What do you rule over?",
+        "King: Everything.",
+        "King: this planet, others, the stars.",
+        "Prince: And they obey?",
+        "King: Of course. I don't allow disobedience.",
+        "Prince: Can you order a sunset? I miss mine.",
+        "King: I will, when conditions are right. Around 7:40 tonight.",
+        "Prince: I'm bored. I'll go now.",
+        "King: Don't! I'll make you Minister of Justice!",
+        "Prince: But there's no one to judge.",
+        "King: Then judge yourself. that's hardest of all.",
+        "Prince: I can do that anywhere. Goodbye.",
+        "King: Wait! I name you my Ambassador!",
+        "Prince (to himself): Grown-ups are so strange"
+    };
+    std::vector<std::string> vainConvo = {
+        "Vain Man: Ah! A visit from an admirer!",
+        "Prince: Hello. That's a funny hat you're wearing.",
+        "Vain Man: It's for answering acclamations.",
+        "Vain Man: Unfortunately, no one ever comes this way.",
+        "Prince: Oh...",
+        "Vain Man: Clap your hands!",
+        "Prince: 'claps hands'",
+        "Vain Man: 'tips hat'",
+        "Prince: And what would make the hat fall off?",
+        "Vain Man: . . .",
+        "Vain Man: Do you admire me?",
+        "Prince: What does admire mean?",
+        "Vain Man: It means to acknowledge that I am the handsomest,",
+        "          the best-dresed, the richest, and the most",
+        "          inteligent man on the planet",
+        "Prince: But you're the only man on your planet!",
+        "Vain Man: Do me this favor. Admire me all the same.",
+        "Prince: I admire you ... but what does it matter?",
+        "Prince (to himself): Grown-ups are certainly very strange"
+    };
+    std::vector<std::string> drunkardConvo = {
+        "Prince: What are you doing there?",
+        "Drunkard: Drinking,",
+        "Prince: Why are you drinking?",
+        "Drunkard: To forget,",
+        "Prince: To forget what?",
+        "Drunkard: To forget that I'm ashamed,",
+        "Prince: What are you ashamed of?",
+        "Drunkard: Of drinking!",
+        "Prince (to himself): Grown-ups are certainly very, very strange"
+    };
+    std::vector<std::string> businessmanConvo = {
+        "Prince: Hello. Your cigarette's gone out.",
+        "Businessman: Three and two is five. Five and seven, twelve.",
+        "             Twelve and three, fifteen. Hello. Fifteen and",
+        "             seven, twenty-two. Twenty-two and six, twenty-",
+        "             eight. No time to light it again. Twenty-six and",
+        "             five, thirty-one. Whew! That amounts to five-",
+        "             hundred-and-one million, six-hundred-twenty-two",
+        "             thousand, seven hundred thirty-one.",
+        "Prince: Five hundred million what?",
+        "Businessman: What? Oh, litle glittering things in the sky.",
+        "Prince: Flies? Bees?",
+        "Businessman: No! Stars. I own them.",
+        "Prince: You own the stars?",
+        "Businessman: Yes. I'm rich. I can buy more stars if discovered.",
+        "Prince: But what do you do with them?",
+        "Businessman: I count them, write the number down, lock it in a",
+        "             drawer. That's enough.",
+        "Prince: That's not like owning a flower or a scarf, you can't",
+        "        use or care for stars.",
+        "Businessman: But I own them.",
+        "Prince: I water my flower and clean my volcanoes. I benefit",
+        "        them. But your stars, do not benefit from you.",
+        "Businessman: . . .",
+        "Prince (to himself): Grown-ups are certainly quite",
+        "                     extraordinary."
+    };
+    std::vector<std::string> lamplighterConvo = {
+        "Prince: Good morning. Why did you just put out your lamp?",
+        "Lamplighter: Orders. Good morning. (lights it again)",
+        "Prince: And now you've lit it?",
+        "Lamplighter: Orders again. Good evening.",
+        "Prince: I don't understand.",
+        "Lamplighter: There's nothing to understand. Orders are",
+        "             orders. In the old days, I had time to rest. Now",
+        "             the planet spins once every minute, so I light",
+        "             and extinguish the lamp every 60 seconds.",
+        "Prince: So your days last one minute?",
+        "Lamplighter: Yes. While we've talked, a month has passed.",
+        "Prince: I like you. You're faithful to your work. I can help",
+        "        you rest. Just walk slowly and you'll stay in the",
+        "        sunlight and avoid lighting the lamp.",
+        "Lamplighter: But I love to sleep.",
+        "Prince: Then you're unlucky.",
+        "Lamplighter: I am. Good morning. (puts out the lamp)",
+        "Prince (to himself): The others would laugh at him. But he's",
+        "                     the only one who thinks beyond himself. I",
+        "                     could have made him a friend...But his",
+        "                     planet is too small. And what I'll miss",
+        "                     most... is all those sunsets."
+    };
+    std::vector<std::string> geographerConvo = {
+        "Geographer: Oh! An explorer!",
+        "Prince: What's that big book? What do you do?",
+        "Geographer: I'm a geographer. I know where all the seas,",
+        "            mountains, rivers, and deserts are.",
+        "Prince: Finally, someone with a real job! Is your planet",
+        "        beautiful? Does it have oceans?",
+        "Geographer: I couldn't say.",
+        "Prince: Mountains?",
+        "Geographer: I couldn't say.",
+        "Prince: But... you're a geographer!",
+        "Geographer: Yes, but I don't explore. I collect reports from",
+        "            explorers. I ask questions and write down what",
+        "            they tell me, if they're trustworthy.",
+        "Prince: Why check if they're trustworthy?",
+        "Geographer: A liar or a drunk might give false information.",
+        "            A drunk might see double mountains.",
+        "Prince: I know someone who'd be a bad explorer...",
+        "Geographer: But you, you’re an explorer!",
+        "            Tell me about your planet!",
+        "Prince: It’s small. I have three volcanoes, two active, one",
+        "        maybe extinct. And a flower.",
+        "Geographer: We don't record flowers. They are ephemeral.",
+        "Prince: What does ephemeral mean?",
+        "Geographer: It means: in danger of disappearing.",
+        "Prince (to himself): My flower is ephemeral...",
+        "                     And I left her alone on my planet...",
+        "Prince: Where should I go next?",
+        "Geographer: Try the planet Earth. It has a good reputation."
+    };
 
     sf::Text dialogueText;
     dialogueText.setFont(font);
@@ -571,8 +705,22 @@ int main() {
             for (auto& p : planetsTex) {
                 game.draw(p);
             }
-            if (inFlowerConvo || inKingConvo || inVainConvo || inDrunkardConvo || inBusinessmanConvo || inLamplighterConvo || inGeographerConvo) {
+            if (inFlowerConvo) {
                 dialogueBox.setPosition(width / 2, height / 2 - 300);
+            } else if (inKingConvo) {
+                dialogueBox.setPosition(width / 2 + 750, height / 2 - 400);
+            } else if (inVainConvo) {
+                dialogueBox.setPosition(width / 2 + 1600, height / 2 - 200);
+            } else if (inDrunkardConvo) {
+                dialogueBox.setPosition(width / 2 + 2400, height / 2 - 200);
+            } else if (inBusinessmanConvo) {
+                dialogueBox.setPosition(width / 2 + 3200, height / 2 - 300);
+            } else if (inLamplighterConvo) {
+                dialogueBox.setPosition(width / 2 + 4000, height / 2 - 190);
+            } else if (inGeographerConvo) {
+                dialogueBox.setPosition(width / 2 + 4800, height / 2 - 290);
+            }
+            if (inFlowerConvo || inKingConvo || inVainConvo || inDrunkardConvo || inBusinessmanConvo || inLamplighterConvo || inGeographerConvo) {
                 dialogueText.setPosition(dialogueBox.getPosition().x - dialogueBox.getSize().x / 2 + 20, dialogueBox.getPosition().y - dialogueBox.getSize().y / 2 + 20);
                 game.draw(dialogueBox);
                 game.draw(dialogueText);
