@@ -264,25 +264,25 @@ int main() {
                         gameStart = false;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
-                        if (position.x > 350 && position.x < 650 && position.y > 300 && position.y < 500) {
+                        if (position.x > 350 && position.x < 650 && position.y > 300 && position.y < 500 && !seenFlower) {
                             seenFlower = true;
                             std::cout << "Flower seen" << std::endl;
-                        } else if (position.x > 1100 && position.x < 1400 && position.y > 200 && position.y < 400) {
+                        } else if (position.x > 1100 && position.x < 1400 && position.y > 200 && position.y < 400 && !seenKing) {
                             seenKing = true;
                             std::cout << "King seen" << std::endl;
-                        } else if (position.x > 1950 && position.x < 2250 && position.y > 400 && position.y < 600) {
+                        } else if (position.x > 1950 && position.x < 2250 && position.y > 400 && position.y < 600 && !seenVainMan) {
                             seenVainMan = true;
                             std::cout << "Vain Man seen" << std::endl;
-                        } else if (position.x > 2750 && position.x < 3050 && position.y > 400 && position.y < 600) {
+                        } else if (position.x > 2750 && position.x < 3050 && position.y > 400 && position.y < 600 && !seenDrunkard) {
                             seenDrunkard = true;
                             std::cout << "Drunkard seen" << std::endl;
-                        } else if (position.x > 3550 && position.x < 3850 && position.y > 300 && position.y < 500) {
+                        } else if (position.x > 3550 && position.x < 3850 && position.y > 300 && position.y < 500 && !seenBusinessman) {
                             seenBusinessman = true;
                             std::cout << "Businessman seen" << std::endl;
-                        } else if (position.x > 4350 && position.x < 4650 && position.y > 410 && position.y < 610) {
+                        } else if (position.x > 4350 && position.x < 4650 && position.y > 410 && position.y < 610 && !seenLamplighter) {
                             seenLamplighter = true;
                             std::cout << "Lamplighter seen" << std::endl;
-                        } else if (position.x > 5150 && position.x < 5450 && position.y > 310 && position.y < 510) {
+                        } else if (position.x > 5150 && position.x < 5450 && position.y > 310 && position.y < 510 && !seenGeographer) {
                             seenGeographer = true;
                             std::cout << "Geographer seen" << std::endl;
                         }
@@ -387,6 +387,73 @@ int main() {
                 game.draw(p);
             }
             game.display();
+        }
+    }
+    if (onEarth) {
+        sf::RenderWindow earth(sf::VideoMode(width, height), "Earth", sf::Style::Close);
+        sf::Vector2f position = prince.getPosition();
+        gravity = 980.0f;
+
+        sf::RectangleShape grass(sf::Vector2f(10000.0f, 200.0f));
+        grass.setFillColor(sf::Color(157, 152, 26));
+        grass.setPosition(sf::Vector2f(0, height - 200));
+
+        sf::View view(sf::FloatRect(0, 0, width, height));
+        view.setCenter(prince.getPosition().x, height/2);
+        clock.restart();
+        while(earth.isOpen()) {
+            sf::Event event;
+            while(earth.pollEvent(event)) {
+                if(event.type == sf::Event::Closed) {
+                    earth.close();
+                    onEarth = false;
+                }
+            }
+
+            float deltaTime = clock.restart().asSeconds();
+
+            // Handle player movement
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && !inAir) { // Jump
+                Yvelocity = -600.0f;
+                inAir = true;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) { // Move left
+                position.x -= speed * deltaTime;
+                runL = true;
+                runR = false;
+            }
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) { // Move right
+                position.x += speed * deltaTime;
+                runL = false;
+                runR = true;
+            }
+
+            //Gravity
+            Yvelocity += gravity * deltaTime;
+            position.y += Yvelocity * deltaTime;
+
+            //landing
+            if (position.y >= height - 200) {
+                position.y = height - 200;
+                Yvelocity = 0.0f;
+                inAir = false;
+            }
+
+            if (position.x < prince.getSize().x / 2) {
+                position.x = prince.getSize().x / 2;
+            }
+            prince.setPosition(position);
+
+            float camX = prince.getPosition().x;
+            camX = std::max(width / 2.0f, camX);
+            camX = std::min(10000.0f - width / 2.0f, camX);
+            view.setCenter(camX, height / 2);
+
+            earth.clear(sf::Color(222, 206, 146));
+            earth.setView(view);
+            earth.draw(prince);
+            earth.draw(grass);
+            earth.display();
         }
     }
     return 0;
