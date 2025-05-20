@@ -434,13 +434,21 @@ int main() {
     arrow.setTexture(arrowTex);
     arrow.setPosition(sf::Vector2f(5500, 0));
 
+    sf::Texture flowersTex;
+    if (!flowersTex.loadFromFile("files/images/Fox.png")) {
+        std::cout << "Error loading fox image" << std::endl;
+    }
+    sf::Sprite flowers;
+    flowers.setTexture(flowersTex);
+    flowers.setPosition(sf::Vector2f(600, 200));
+
     sf::Texture foxTex;
     if (!foxTex.loadFromFile("files/images/Fox.png")) {
         std::cout << "Error loading fox image" << std::endl;
     }
     sf::Sprite fox;
     fox.setTexture(foxTex);
-    fox.setPosition(sf::Vector2f(800, height - 500));
+    fox.setPosition(sf::Vector2f(1000, height - 500));
 
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
@@ -768,7 +776,7 @@ int main() {
                         onEarth = false;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
-                        if (position.x > 700 && position.x < 1000 && position.y > 0 && position.y < 1000 && !seenFlowers) {
+                        if (position.x > 500 && position.x < 800 && position.y > 0 && position.y < 1000 && !seenFlowers) {
                             currentConvo = &flowersConvo;
                             visibleLines.clear();
                             currentLineIndex = 0;
@@ -778,7 +786,7 @@ int main() {
                             inFlowersConvo = true;
                             seenFlowers = true;
                             std::cout << "Flowers seen" << std::endl;
-                        } else if (position.x > 700 && position.x < 1000 && position.y > 0 && position.y < 1000 && !seenFox) {
+                        } else if (position.x > 900 && position.x < 1200 && position.y > 0 && position.y < 1000 && !seenFox) {
                             currentConvo = &foxConvo;
                             visibleLines.clear();
                             currentLineIndex = 0;
@@ -867,6 +875,7 @@ int main() {
                     earth.draw(tile);
                 }
             }
+            earth.draw(flowers);
             if (inFlowersConvo) {
                 dialogueBox.setPosition(875, height / 2 - 300);
             } else if (inFoxConvo) {
