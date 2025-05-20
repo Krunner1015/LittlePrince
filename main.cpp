@@ -98,6 +98,8 @@ int main() {
     bool inLamplighterConvo = false;
     bool seenGeographer = false;
     bool inGeographerConvo = false;
+    bool seenFlowers = false;
+    bool inFlowersConvo = false;
     bool seenFox = false;
     bool inFoxConvo = false;
     bool gameStart = false;
@@ -267,6 +269,8 @@ int main() {
         "Prince: Where should I go next?",
         "Geographer: Try the planet Earth. It has a good reputation."
     };
+
+    std::vector<std::string> flowersConvo = {"..."};
 
     std::vector<std::string> foxConvo = {"..."};
 
@@ -764,7 +768,17 @@ int main() {
                         onEarth = false;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
-                        if (position.x > 700 && position.x < 1000 && position.y > 0 && position.y < 1000 && !seenFox) {
+                        if (position.x > 700 && position.x < 1000 && position.y > 0 && position.y < 1000 && !seenFlowers) {
+                            currentConvo = &flowersConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFlowersConvo = true;
+                            seenFlowers = true;
+                            std::cout << "Flowers seen" << std::endl;
+                        } else if (position.x > 700 && position.x < 1000 && position.y > 0 && position.y < 1000 && !seenFox) {
                             currentConvo = &foxConvo;
                             visibleLines.clear();
                             currentLineIndex = 0;
@@ -853,10 +867,12 @@ int main() {
                     earth.draw(tile);
                 }
             }
-            if (inFoxConvo) {
+            if (inFlowersConvo) {
+                dialogueBox.setPosition(875, height / 2 - 300);
+            } else if (inFoxConvo) {
                 dialogueBox.setPosition(875, height / 2 - 300);
             }
-            if (inFoxConvo) {
+            if (inFlowersConvo || inFoxConvo) {
                 dialogueText.setPosition(dialogueBox.getPosition().x - dialogueBox.getSize().x / 2 + 20, dialogueBox.getPosition().y - dialogueBox.getSize().y / 2 + 20);
                 earth.draw(dialogueBox);
                 earth.draw(dialogueText);
