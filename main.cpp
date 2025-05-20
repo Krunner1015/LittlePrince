@@ -98,6 +98,8 @@ int main() {
     bool inLamplighterConvo = false;
     bool seenGeographer = false;
     bool inGeographerConvo = false;
+    bool seenFox = false;
+    bool inFoxConvo = false;
     bool gameStart = false;
     bool onEarth = false;
 
@@ -266,6 +268,8 @@ int main() {
         "Geographer: Try the planet Earth. It has a good reputation."
     };
 
+    std::vector<std::string> foxConvo = {"..."};
+
     sf::Text dialogueText;
     dialogueText.setFont(font);
     dialogueText.setCharacterSize(24);
@@ -426,6 +430,14 @@ int main() {
     arrow.setTexture(arrowTex);
     arrow.setPosition(sf::Vector2f(5500, 0));
 
+    sf::Texture foxTex;
+    if (!foxTex.loadFromFile("files/images/Fox.png")) {
+        std::cout << "Error loading fox image" << std::endl;
+    }
+    sf::Sprite fox;
+    fox.setTexture(foxTex);
+    fox.setPosition(sf::Vector2f(800, height - 500));
+
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
         sf::Event event;
@@ -439,7 +451,7 @@ int main() {
                     int y = event.mouseButton.y;
                     if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height - 50)) {
                         start.close();
-                        gameStart = true;
+                        onEarth = true;
                         height = 900;
                     }
                 }
@@ -746,6 +758,25 @@ int main() {
                     earth.close();
                     onEarth = false;
                 }
+                if (event.type == sf::Event::KeyPressed) {
+                    if (event.key.code == sf::Keyboard::Escape) {
+                        earth.close();
+                        onEarth = false;
+                    }
+                    if (event.key.code == sf::Keyboard::Down) {
+                        if (position.x > 700 && position.x < 1000 && position.y > 0 && position.y < 1000 && !seenFox) {
+                            currentConvo = &foxConvo;
+                            visibleLines.clear();
+                            currentLineIndex = 0;
+                            visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                            updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                            dialogueClock.restart();
+                            inFoxConvo = true;
+                            seenFox = true;
+                            std::cout << "Fox seen" << std::endl;
+                        }
+                    }
+                }
             }
 
             float deltaTime = clock.restart().asSeconds();
@@ -780,6 +811,19 @@ int main() {
             if (position.x < prince.getSize().x / 2) {
                 position.x = prince.getSize().x / 2;
             }
+
+            if (currentConvo && dialogueClock.getElapsedTime().asSeconds() >= dialogueDelay) {
+                currentLineIndex++;
+                if (currentLineIndex < currentConvo->size()) {
+                    visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                    if (visibleLines.size() > 8) {
+                        visibleLines.erase(visibleLines.begin());
+                    }
+                    updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                    dialogueClock.restart();
+                }
+            }
+
             prince.setPosition(position);
 
             float camX = prince.getPosition().x;
@@ -787,7 +831,7 @@ int main() {
             camX = std::min(10000.0f - width / 2.0f, camX);
             view.setCenter(camX, height / 2);
 
-            earth.clear(sf::Color(222, 206, 146));
+            earth.clear(sf::Color(255, 238, 198));
             earth.setView(view);
             if (runL && !runR) {
                 earth.draw(prince);
@@ -798,8 +842,24 @@ int main() {
             }
             runL = false;
             runR = false;
-            for (auto& tile : grassTiles) {
-                earth.draw(tile);
+            if (seenFox) {
+                for (auto& tile : grassTiles) {
+                    earth.draw(tile);
+                }
+                earth.draw(fox);
+            } else {
+                earth.draw(fox);
+                for (auto& tile : grassTiles) {
+                    earth.draw(tile);
+                }
+            }
+            if (inFoxConvo) {
+                dialogueBox.setPosition(875, height / 2 - 300);
+            }
+            if (inFoxConvo) {
+                dialogueText.setPosition(dialogueBox.getPosition().x - dialogueBox.getSize().x / 2 + 20, dialogueBox.getPosition().y - dialogueBox.getSize().y / 2 + 20);
+                earth.draw(dialogueBox);
+                earth.draw(dialogueText);
             }
             earth.display();
         }
