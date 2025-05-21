@@ -435,12 +435,12 @@ int main() {
     arrow.setPosition(sf::Vector2f(5500, 0));
 
     sf::Texture flowersTex;
-    if (!flowersTex.loadFromFile("files/images/Fox.png")) {
-        std::cout << "Error loading fox image" << std::endl;
+    if (!flowersTex.loadFromFile("files/images/flowers.png")) {
+        std::cout << "Error loading flowers image" << std::endl;
     }
     sf::Sprite flowers;
     flowers.setTexture(flowersTex);
-    flowers.setPosition(sf::Vector2f(600, 200));
+    flowers.setPosition(sf::Vector2f(600, 450));
 
     sf::Texture foxTex;
     if (!foxTex.loadFromFile("files/images/Fox.png")) {
@@ -448,7 +448,7 @@ int main() {
     }
     sf::Sprite fox;
     fox.setTexture(foxTex);
-    fox.setPosition(sf::Vector2f(1000, height - 500));
+    fox.setPosition(sf::Vector2f(2000, height - 500));
 
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
@@ -776,7 +776,7 @@ int main() {
                         onEarth = false;
                     }
                     if (event.key.code == sf::Keyboard::Down) {
-                        if (position.x > 500 && position.x < 800 && position.y > 0 && position.y < 1000 && !seenFlowers) {
+                        if (position.x > 900 && position.x < 1200 && position.y > 0 && position.y < 1000 && !seenFlowers) {
                             currentConvo = &flowersConvo;
                             visibleLines.clear();
                             currentLineIndex = 0;
@@ -786,7 +786,7 @@ int main() {
                             inFlowersConvo = true;
                             seenFlowers = true;
                             std::cout << "Flowers seen" << std::endl;
-                        } else if (position.x > 900 && position.x < 1200 && position.y > 0 && position.y < 1000 && !seenFox) {
+                        } else if (position.x > 1925 && position.x < 2225 && position.y > 0 && position.y < 1000 && !seenFox) {
                             currentConvo = &foxConvo;
                             visibleLines.clear();
                             currentLineIndex = 0;
@@ -855,6 +855,7 @@ int main() {
 
             earth.clear(sf::Color(255, 238, 198));
             earth.setView(view);
+            earth.draw(flowers);
             if (runL && !runR) {
                 earth.draw(prince);
             } else if (runR && !runL) {
@@ -875,11 +876,10 @@ int main() {
                     earth.draw(tile);
                 }
             }
-            earth.draw(flowers);
             if (inFlowersConvo) {
-                dialogueBox.setPosition(875, height / 2 - 300);
+                dialogueBox.setPosition(1050, height / 2 - 300);
             } else if (inFoxConvo) {
-                dialogueBox.setPosition(875, height / 2 - 300);
+                dialogueBox.setPosition(2075, height / 2 - 300);
             }
             if (inFlowersConvo || inFoxConvo) {
                 dialogueText.setPosition(dialogueBox.getPosition().x - dialogueBox.getSize().x / 2 + 20, dialogueBox.getPosition().y - dialogueBox.getSize().y / 2 + 20);
