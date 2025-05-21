@@ -463,7 +463,7 @@ int main() {
                     int y = event.mouseButton.y;
                     if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height - 50)) {
                         start.close();
-                        onEarth = true;
+                        gameStart = true;
                         height = 900;
                     }
                 }
