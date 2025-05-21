@@ -59,7 +59,7 @@ void updateDialogueDisplay(
     sf::FloatRect bounds = text.getLocalBounds();
     box.setSize(sf::Vector2f(windowWidth - 100, bounds.height + 40));
     box.setOrigin(box.getSize().x / 2, box.getSize().y / 2);
-    box.setPosition(windowWidth / 2.0f, 800); // adjust as needed
+    box.setPosition(windowWidth / 2.0f, 800);
     text.setPosition(windowWidth / 2.0f, 800 - bounds.height / 2 + 10);
 }
 
@@ -434,22 +434,6 @@ int main() {
     arrow.setTexture(arrowTex);
     arrow.setPosition(sf::Vector2f(5500, 0));
 
-    sf::Texture flowersTex;
-    if (!flowersTex.loadFromFile("files/images/flowers.png")) {
-        std::cout << "Error loading flowers image" << std::endl;
-    }
-    sf::Sprite flowers;
-    flowers.setTexture(flowersTex);
-    flowers.setPosition(sf::Vector2f(600, 450));
-
-    sf::Texture foxTex;
-    if (!foxTex.loadFromFile("files/images/Fox.png")) {
-        std::cout << "Error loading fox image" << std::endl;
-    }
-    sf::Sprite fox;
-    fox.setTexture(foxTex);
-    fox.setPosition(sf::Vector2f(2000, height - 500));
-
     sf::RenderWindow start(sf::VideoMode(width, height), "Welcome!", sf::Style::Close);
     while(start.isOpen()) {
         sf::Event event;
@@ -692,6 +676,10 @@ int main() {
                     }
                     updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
                     dialogueClock.restart();
+                } else {
+                    currentConvo = nullptr;
+                    inFlowersConvo = false;
+                    inFoxConvo = false;
                 }
             }
 
@@ -759,6 +747,22 @@ int main() {
             grass.setPosition(sf::Vector2f(x, height - 332.0f));
             grassTiles.push_back(grass);
         }
+
+        sf::Texture flowersTex;
+        if (!flowersTex.loadFromFile("files/images/flowers.png")) {
+            std::cout << "Error loading flowers image" << std::endl;
+        }
+        sf::Sprite flowers;
+        flowers.setTexture(flowersTex);
+        flowers.setPosition(sf::Vector2f(600, 450));
+
+        sf::Texture foxTex;
+        if (!foxTex.loadFromFile("files/images/Fox.png")) {
+            std::cout << "Error loading fox image" << std::endl;
+        }
+        sf::Sprite fox;
+        fox.setTexture(foxTex);
+        fox.setPosition(sf::Vector2f(2000, height - 500));
 
         sf::View view(sf::FloatRect(0, 0, width, height));
         view.setCenter(prince.getPosition().x, height/2);
@@ -843,6 +847,10 @@ int main() {
                     }
                     updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
                     dialogueClock.restart();
+                } else {
+                    currentConvo = nullptr;
+                    inFlowersConvo = false;
+                    inFoxConvo = false;
                 }
             }
 
