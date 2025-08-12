@@ -104,6 +104,7 @@ int main() {
     bool inFoxConvo = false;
     bool gameStart = false;
     bool onEarth = false;
+    bool endGame = false;
 
     std::vector<std::string> flowerConvo = {
         "Prince: Good-bye",
@@ -270,9 +271,40 @@ int main() {
         "Geographer: Try the planet Earth. It has a good reputation."
     };
 
-    std::vector<std::string> flowersConvo = {"..."};
+    std::vector<std::string> flowersConvo = {
+        "Prince: Good morning",
+        "Flowers: Good morning",
+        "Prince: Who are you?",
+        "Flowers: We are roses",
+        "",
+        "And he was overcome with sadness. His flower had told him",
+        "that she was the only one of her kind in all the universe.",
+        "And here were five thousand of them, all alike, in one single",
+        "garden!",
+        "",
+        "Prince (to himself): I thought that I was rich, with a flower",
+        "that was unique in all the world; and all I had was a common",
+        "rose. A common rose, and three volcanoes that come up to my",
+        "knees-- and on of them perhaps extinct forever... that doesn't",
+        "make me a very good prince..."
+    };
 
-    std::vector<std::string> foxConvo = {"..."};
+    std::vector<std::string> foxConvo = {
+        "Fox: Good morning.",
+        "Prince: Good morning. Who are you?",
+        "Fox: I'm a fox.",
+        "Prince: Play with me.",
+        "Fox: I can't. I'm not tamed.",
+        "Prince: What's 'tame'?",
+        "Fox: It means making a bond. If you tame me, we'll be special",
+        "to  each other.",
+        "Prince: Will you be sad if I leave?",
+        "Fox: Yes. But the wheat will remind me of you.",
+        "Fox: My secret: You see clearly only with the heart. ",
+        "What matters is invisible.",
+        "Fox: You're responsible for what you tame.",
+        "Prince: I'm responsible for my rose."
+    };
 
     sf::Text dialogueText;
     dialogueText.setFont(font);
@@ -762,7 +794,7 @@ int main() {
         }
         sf::Sprite fox;
         fox.setTexture(foxTex);
-        fox.setPosition(sf::Vector2f(2000, height - 500));
+        fox.setPosition(sf::Vector2f(2000, height - 300));
 
         sf::View view(sf::FloatRect(0, 0, width, height));
         view.setCenter(prince.getPosition().x, height/2);
@@ -788,6 +820,7 @@ int main() {
                             updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
                             dialogueClock.restart();
                             inFlowersConvo = true;
+                            inFoxConvo = false;
                             seenFlowers = true;
                             std::cout << "Flowers seen" << std::endl;
                         } else if (position.x > 1925 && position.x < 2225 && position.y > 0 && position.y < 1000 && !seenFox) {
@@ -797,6 +830,7 @@ int main() {
                             visibleLines.push_back((*currentConvo)[currentLineIndex]);
                             updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
                             dialogueClock.restart();
+                            inFlowersConvo = false;
                             inFoxConvo = true;
                             seenFox = true;
                             std::cout << "Fox seen" << std::endl;
@@ -836,6 +870,10 @@ int main() {
 
             if (position.x < prince.getSize().x / 2) {
                 position.x = prince.getSize().x / 2;
+            } else if (position.x > 3000 && seenFlowers && seenFox) {
+                earth.close();
+                onEarth = false;
+                endGame = true;
             }
 
             if (currentConvo && dialogueClock.getElapsedTime().asSeconds() >= dialogueDelay) {
@@ -895,6 +933,50 @@ int main() {
                 earth.draw(dialogueText);
             }
             earth.display();
+        }
+    }
+    if (endGame) {
+        sf::RenderWindow end(sf::VideoMode(width, height), "End Game", sf::Style::Close);
+
+        sf::Text last("The Little Prince", font, 75);
+        last.setFillColor(sf::Color::Black);
+        last.setStyle(sf::Text::Bold);
+        setText(last, width/2, 100);
+
+        sf::Text theEnd("The End ", font, 150);
+        theEnd.setFillColor(sf::Color::Black);
+        theEnd.setStyle(sf::Text::Bold);
+        setText(theEnd, width/2, 230);
+
+        sf::Texture setTex;
+        if (!setTex.loadFromFile("files/images/End.jpg")) {
+            std::cout << "Error loading set image" << std::endl;
+        }
+        sf::Sprite set;
+        set.setTexture(setTex);
+        set.setPosition(sf::Vector2f(-275, 0));
+
+        sf::Texture heartTex;
+        if (!heartTex.loadFromFile("files/images/Heart.png")) {
+            std::cout << "Error loading heart image" << std::endl;
+        }
+        sf::Sprite heart;
+        heart.setTexture(heartTex);
+        heart.setPosition(sf::Vector2f(800, 155));
+
+        while(end.isOpen()) {
+            sf::Event event;
+            while(end.pollEvent(event)) {
+                if(event.type == sf::Event::Closed) {
+                    end.close();
+                }
+            }
+            end.clear(sf::Color(255, 242, 208));
+            end.draw(set);
+            end.draw(last);
+            end.draw(theEnd);
+            end.draw(heart);
+            end.display();
         }
     }
     return 0;
