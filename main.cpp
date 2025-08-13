@@ -102,6 +102,8 @@ int main() {
     bool inFlowersConvo = false;
     bool seenFox = false;
     bool inFoxConvo = false;
+    bool seenEndFlower = false;
+    bool inEndFlowerConvo = false;
     bool gameStart = false;
     bool onEarth = false;
     bool endGame = false;
@@ -283,10 +285,11 @@ int main() {
         "garden!",
         "",
         "Prince (to himself): I thought that I was rich, with a flower",
-        "that was unique in all the world; and all I had was a common",
-        "rose. A common rose, and three volcanoes that come up to my",
-        "knees-- and on of them perhaps extinct forever... that doesn't",
-        "make me a very good prince..."
+        "                     that was unique in all the world; and all",
+        "                     I had was a common rose. A common rose, and",
+        "                     three volcanoes that come up to my knees--",
+        "                     and on of them perhaps extinct forever...",
+        "                     that doesn't make me a very good prince..."
     };
 
     std::vector<std::string> foxConvo = {
@@ -297,13 +300,19 @@ int main() {
         "Fox: I can't. I'm not tamed.",
         "Prince: What's 'tame'?",
         "Fox: It means making a bond. If you tame me, we'll be special",
-        "to  each other.",
+        "     to  each other.",
         "Prince: Will you be sad if I leave?",
         "Fox: Yes. But the wheat will remind me of you.",
-        "Fox: My secret: You see clearly only with the heart. ",
-        "What matters is invisible.",
-        "Fox: You're responsible for what you tame.",
+        "     My secret: You see clearly only with the heart. ",
+        "     What matters is invisible.",
+        "     You're responsible for what you tame.",
         "Prince: I'm responsible for my rose."
+    };
+
+    std::vector<std::string> endFlowerConvo = {
+        "I'm sorry for leaving you.",
+        "I have learned a little thing called love from a talking fox,",
+        "and realized how stupid I was to leave you amor."
     };
 
     sf::Text dialogueText;
@@ -796,6 +805,14 @@ int main() {
         fox.setTexture(foxTex);
         fox.setPosition(sf::Vector2f(2000, height - 300));
 
+        sf::Texture flowerTex;
+        if (!flowerTex.loadFromFile("files/images/Flower.png")) {
+            std::cout << "Error loading flower image" << std::endl;
+        }
+        sf::Sprite flower;
+        flower.setTexture(flowerTex);
+        flower.setPosition(sf::Vector2f(3240, 250));
+
         sf::View view(sf::FloatRect(0, 0, width, height));
         view.setCenter(prince.getPosition().x, height/2);
         clock.restart();
@@ -828,6 +845,7 @@ int main() {
                             dialogueClock.restart();
                             inFlowersConvo = true;
                             inFoxConvo = false;
+                            inEndFlowerConvo = false;
                             seenFlowers = true;
                             std::cout << "Flowers seen" << std::endl;
                         } else if (position.x > 1925 && position.x < 2225 && position.y > 0 && position.y < 1000 && !seenFox) {
@@ -839,8 +857,27 @@ int main() {
                             dialogueClock.restart();
                             inFlowersConvo = false;
                             inFoxConvo = true;
+                            inEndFlowerConvo = false;
                             seenFox = true;
                             std::cout << "Fox seen" << std::endl;
+                        } else if (position.x > 3500 && position.x < 3800 && seenFlowers && seenFox) {
+                            if (seenEndFlower) {
+                                earth.close();
+                                onEarth = false;
+                                endGame = true;
+                            } else {
+                                currentConvo = &endFlowerConvo;
+                                visibleLines.clear();
+                                currentLineIndex = 0;
+                                visibleLines.push_back((*currentConvo)[currentLineIndex]);
+                                updateDialogueDisplay(dialogueText, dialogueBox, visibleLines, font, 24, width);
+                                dialogueClock.restart();
+                                inFlowersConvo = false;
+                                inFoxConvo = false;
+                                inEndFlowerConvo = true;
+                                seenEndFlower = true;
+                                std::cout << "End flower seen" << std::endl;
+                            }
                         }
                     }
                 }
@@ -885,11 +922,7 @@ int main() {
 
             if (position.x < prince.getSize().x / 2) {
                 position.x = prince.getSize().x / 2;
-            } //else if (position.x > 3000 && seenFlowers && seenFox) {
-            //     earth.close();
-            //     onEarth = false;
-            //     endGame = true;
-            // }
+            }
 
             if (currentConvo && dialogueClock.getElapsedTime().asSeconds() >= dialogueDelay) {
                 currentLineIndex++;
@@ -945,13 +978,16 @@ int main() {
                 dialogueBox.setPosition(1050, height / 2 - 300);
             } else if (inFoxConvo) {
                 dialogueBox.setPosition(2075, height / 2 - 300);
+            } else if (inEndFlowerConvo) {
+                dialogueBox.setPosition(3600, height / 2 - 300);
             }
-            if (inFlowersConvo || inFoxConvo) {
+            if (inFlowersConvo || inFoxConvo || inEndFlowerConvo) {
                 dialogueText.setPosition(dialogueBox.getPosition().x - dialogueBox.getSize().x / 2 + 20, dialogueBox.getPosition().y - dialogueBox.getSize().y / 2 + 20);
                 earth.draw(dialogueBox);
                 earth.draw(dialogueText);
             }
             earth.draw(endPlanet);
+            earth.draw(flower);
             earth.display();
         }
     }
