@@ -310,9 +310,8 @@ int main() {
     };
 
     std::vector<std::string> endFlowerConvo = {
-        "I'm sorry for leaving you.",
-        "I have learned a little thing called love from a talking fox,",
-        "and realized how stupid I was to leave you amor."
+        "Even if I danced through every galaxy, I would always return",
+        "to you amor... for your steps are the rhythm of my heart.",
     };
 
     sf::Text dialogueText;
@@ -488,7 +487,7 @@ int main() {
                     int y = event.mouseButton.y;
                     if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height - 50)) {
                         start.close();
-                        onEarth = true;
+                        gameStart = true;
                         height = 900;
                     }
                 }
