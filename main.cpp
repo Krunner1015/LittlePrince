@@ -77,7 +77,7 @@ int main() {
     std::vector<std::string> visibleLines;
     int width = 1000;
     int height = 1100;
-    float speed = 1000.0f;
+    float speed = 200.0f;
     float gravity = 500.0f;
     float Yvelocity = 0.0f;
     bool runL = false;
