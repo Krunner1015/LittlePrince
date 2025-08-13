@@ -77,7 +77,7 @@ int main() {
     std::vector<std::string> visibleLines;
     int width = 1000;
     int height = 1100;
-    float speed = 200.0f;
+    float speed = 1000.0f;
     float gravity = 500.0f;
     float Yvelocity = 0.0f;
     bool runL = false;
@@ -479,7 +479,7 @@ int main() {
                     int y = event.mouseButton.y;
                     if ((x > width / 2 - 250 && x < width / 2 + 250) && (y > height - 150 && y < height - 50)) {
                         start.close();
-                        gameStart = true;
+                        onEarth = true;
                         height = 900;
                     }
                 }
@@ -799,6 +799,13 @@ int main() {
         sf::View view(sf::FloatRect(0, 0, width, height));
         view.setCenter(prince.getPosition().x, height/2);
         clock.restart();
+
+        sf::CircleShape endPlanet(700.0f);
+        endPlanet.setFillColor(sf::Color(191, 152, 77));
+        endPlanet.setOrigin(700.0f, 700.0f);
+        endPlanet.setPosition(3600, 1200);
+        planets.push_back(endPlanet);
+
         while(earth.isOpen()) {
             sf::Event event;
             while(earth.pollEvent(event)) {
@@ -860,9 +867,17 @@ int main() {
             //Gravity
             Yvelocity += gravity * deltaTime;
             position.y += Yvelocity * deltaTime;
+            sf::Vector2f bottomLeft(position.x - prince.getSize().x / 2, position.y);
+            sf::Vector2f bottomRight(position.x + prince.getSize().x / 2, position.y);
+
+            onPlanet = false;
+            onPlanet |= checkPlanetCollision(endPlanet, position, bottomLeft, bottomRight, Yvelocity, inAir);
+            if (!onPlanet) {
+                inAir = true;
+            }
 
             //landing
-            if (position.y >= height - 200) {
+            if (position.y >= height - 200 && position.x <= 3000) {
                 position.y = height - 200;
                 Yvelocity = 0.0f;
                 inAir = false;
@@ -870,11 +885,11 @@ int main() {
 
             if (position.x < prince.getSize().x / 2) {
                 position.x = prince.getSize().x / 2;
-            } else if (position.x > 3000 && seenFlowers && seenFox) {
-                earth.close();
-                onEarth = false;
-                endGame = true;
-            }
+            } //else if (position.x > 3000 && seenFlowers && seenFox) {
+            //     earth.close();
+            //     onEarth = false;
+            //     endGame = true;
+            // }
 
             if (currentConvo && dialogueClock.getElapsedTime().asSeconds() >= dialogueDelay) {
                 currentLineIndex++;
@@ -913,13 +928,17 @@ int main() {
             runR = false;
             if (seenFox) {
                 for (auto& tile : grassTiles) {
-                    earth.draw(tile);
+                    if (tile.getPosition().x <= 3000) {
+                        earth.draw(tile);
+                    }
                 }
                 earth.draw(fox);
             } else {
                 earth.draw(fox);
                 for (auto& tile : grassTiles) {
-                    earth.draw(tile);
+                    if (tile.getPosition().x <= 3000) {
+                        earth.draw(tile);
+                    }
                 }
             }
             if (inFlowersConvo) {
@@ -932,6 +951,7 @@ int main() {
                 earth.draw(dialogueBox);
                 earth.draw(dialogueText);
             }
+            earth.draw(endPlanet);
             earth.display();
         }
     }
