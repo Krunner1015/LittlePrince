@@ -344,10 +344,25 @@ int main() {
     startText.setStyle(sf::Text::Bold);
     setText(startText, width/2, height - 100);
 
-    sf::RectangleShape prince(sf::Vector2f(50.0f, 100.0f));
-    prince.setFillColor(sf::Color::Green);
-    prince.setOrigin(prince.getSize().x / 2, prince.getSize().y);
+    sf::Texture princeTex;
+    if (!princeTex.loadFromFile("files/images/Prince.png")) {
+        std::cout << "Error loading prince image" << std::endl;
+    }
+    princeTex.setRepeated(true);
+    sf::Sprite princeLeft, prince, princeRight;
+    princeLeft.setTexture(princeTex);
+    princeLeft.setTextureRect(sf::IntRect(34, 0, 70, 100));
+    princeLeft.setOrigin(35, 100);
+    princeLeft.setPosition(sf::Vector2f(width / 2, height - 300.0f));
+    prince.setTexture(princeTex);
+    prince.setTextureRect(sf::IntRect(119, 0, 70, 100));
+    prince.setOrigin(35, 100);
     prince.setPosition(sf::Vector2f(width / 2, height - 300.0f));
+    princeRight.setTexture(princeTex);
+    princeRight.setTextureRect(sf::IntRect(196, 0, 70, 100));
+    princeRight.setOrigin(35, 100);
+    princeRight.setPosition(sf::Vector2f(width / 2, height - 300.0f));
+
 
     sf::Texture starsTex;
     if (!starsTex.loadFromFile("files/images/stars.png")) {
@@ -670,8 +685,8 @@ int main() {
             //Gravity
             Yvelocity += gravity * deltaTime;
             position.y += Yvelocity * deltaTime;
-            sf::Vector2f bottomLeft(position.x - prince.getSize().x / 2, position.y);
-            sf::Vector2f bottomRight(position.x + prince.getSize().x / 2, position.y);
+            sf::Vector2f bottomLeft(position.x - 25, position.y);
+            sf::Vector2f bottomRight(position.x + 25, position.y);
 
             // Planet collision check
             onPlanet = false;
@@ -723,8 +738,9 @@ int main() {
                 }
             }
 
-
+            princeLeft.setPosition(position);
             prince.setPosition(position);
+            princeRight.setPosition(position);
             view.setCenter(position);
             game.setView(view);
 
@@ -734,9 +750,9 @@ int main() {
             game.draw(stars);
             game.draw(arrow);
             if (runL && !runR) {
-                game.draw(prince);
+                game.draw(princeLeft);
             } else if (runR && !runL) {
-                game.draw(prince);
+                game.draw(princeRight);
             } else {
                 game.draw(prince);
             }
@@ -903,8 +919,8 @@ int main() {
             //Gravity
             Yvelocity += gravity * deltaTime;
             position.y += Yvelocity * deltaTime;
-            sf::Vector2f bottomLeft(position.x - prince.getSize().x / 2, position.y);
-            sf::Vector2f bottomRight(position.x + prince.getSize().x / 2, position.y);
+            sf::Vector2f bottomLeft(position.x - 35, position.y);
+            sf::Vector2f bottomRight(position.x + 35, position.y);
 
             onPlanet = false;
             onPlanet |= checkPlanetCollision(endPlanet, position, bottomLeft, bottomRight, Yvelocity, inAir);
@@ -919,8 +935,8 @@ int main() {
                 inAir = false;
             }
 
-            if (position.x < prince.getSize().x / 2) {
-                position.x = prince.getSize().x / 2;
+            if (position.x < 35) {
+                position.x = 35;
             }
 
             if (currentConvo && dialogueClock.getElapsedTime().asSeconds() >= dialogueDelay) {

@@ -1,0 +1,3 @@
+C:/Users/kaide/CLionProjects/LittlePrince/cmake-build-debug/CMakeFiles/LittlePrince.dir
+C:/Users/kaide/CLionProjects/LittlePrince/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/kaide/CLionProjects/LittlePrince/cmake-build-debug/CMakeFiles/rebuild_cache.dir
